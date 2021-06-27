@@ -1,0 +1,52 @@
+services:
+  hub:
+    image: selenium/hub:4.0.0-rc-1-prerelease-20210618
+    ports:
+      - 4442-4444:4442-4444
+    networks:
+      - grid
+        
+  node-chrome:
+    image: selenium/node-chrome:4.0.0-rc-1-prerelease-20210618
+    depends_on:
+      - hub
+    environment:
+      - SE_EVENT_BUS_HOST=hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+    networks:
+      - grid
+
+  node-edge:
+    image: selenium/node-edge:4.0.0-rc-1-prerelease-20210618
+    depends_on:
+      - hub
+    environment:
+      - SE_EVENT_BUS_HOST=hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+    networks:
+      - grid
+
+  node-firefox:
+    image: selenium/node-firefox:4.0.0-rc-1-prerelease-20210618
+    depends_on:
+      - hub
+    environment:
+      - SE_EVENT_BUS_HOST=hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+    networks:
+      - grid
+
+  firefox-standalone:
+    image: selenium/standalone-firefox:4.0.0-rc-1-prerelease-20210618
+    depends_on:
+      - hub
+    ports:
+      - 4448:4444
+    networks:
+      - grid
+      
+networks:
+  grid:
